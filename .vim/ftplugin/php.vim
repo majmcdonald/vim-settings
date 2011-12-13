@@ -8,10 +8,6 @@ source ~/.vim/php-doc.vim
 " Set up automatic formatting
 set formatoptions+=tcqlro
 
-" Jump to matching bracket for 3/10th of a second (works with showmatch)
-set matchtime=3
-set showmatch
-
 " Set maximum text width (for wrapping)
 set textwidth=80
 
@@ -19,8 +15,8 @@ set textwidth=80
 " Syntax options
 "
 " Enable folding of class/function blocks
-let php_folding = 1
-
+"let php_folding = 1
+"
 " Do not use short tags to find PHP blocks
 let php_noShortTags = 1
 
