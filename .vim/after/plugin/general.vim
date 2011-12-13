@@ -33,7 +33,7 @@ if exists('loaded_taglist')
 	let tlist_php_settings = 'php;c:class;d:constant;f:function'
 
 	" map <F3> to toggle taglist window
-	nmap <silent> <F3> :TlistToggle<CR>
+    "	nmap <silent> <F3> :TlistToggle<CR>
 endif
 
 " Set CVS executable for VCSCommand plugin
