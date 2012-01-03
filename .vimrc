@@ -12,6 +12,10 @@ set hidden
 " Turn syntax highlighting on
 syntax on
 
+
+" Turn line numbers on
+set nu 
+
 "
 " GLOBAL SETTINGS
 "
@@ -66,6 +70,12 @@ set shiftround
 
 " Use 4 spaces for (auto)indent
 set shiftwidth=4
+
+" Special python indenting
+let g:pyindent_open_paren = '&sw'
+let g:pyindent_nested_paren = '&sw'
+let g:pyindent_continue = '&sw'
+
 
 " Show (partial) commands (or size of selection in Visual mode) in the status line
 set showcmd
