@@ -9,7 +9,7 @@ source ~/.vim/php-doc.vim
 set formatoptions+=tcqlro
 
 " Set maximum text width (for wrapping)
-set textwidth=80
+" set textwidth=80
 
 "
 " Syntax options

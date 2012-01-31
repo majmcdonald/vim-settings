@@ -175,7 +175,7 @@ vnoremap < <gv
 vnoremap > >gv 
 
 "colors
-colo desert
+colo delek
 
 
 " Generic highlight changes
