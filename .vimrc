@@ -40,14 +40,12 @@ set enc=utf-8
 " Remember up to 100 'colon' commmands and search patterns
 set history=100
 
-" Enable incremental search
-set incsearch
 
 " Always show status line, even for one window
 set laststatus=2
 
 " Jump to matching bracket for 2/10th of a second (works with showmatch)
-set matchtime=2
+"set matchtime=2
 
 " Don't highlight results of a search
 set nohlsearch
@@ -72,9 +70,9 @@ set shiftround
 set shiftwidth=4
 
 " Special python indenting
-let g:pyindent_open_paren = '&sw'
-let g:pyindent_nested_paren = '&sw'
-let g:pyindent_continue = '&sw'
+"let g:pyindent_open_paren = '&sw'
+"let g:pyindent_nested_paren = '&sw'
+"let g:pyindent_continue = '&sw'
 
 
 " Show (partial) commands (or size of selection in Visual mode) in the status line
@@ -96,7 +94,7 @@ set tabstop=4
 set updatecount=50
 
 " Ignore certain types of files on completion
-set wildignore+=*.o,*.obj,*.pyc,.git
+set wildignore+=*.o,*.obj,*.pyc,.git,.svn
 
 " Remember things between sessions
 "
@@ -114,14 +112,10 @@ set wildmenu
 "   - on first <Tab>, when more than one match, list all matches and complete
 "     the longest common  string
 "   - on second <Tab>, complete the next full match and show menu
-set wildmode=list:longest,full
+ set wildmode=list:longest,full
 
 " Go back to the position the cursor was on the last time this file was edited
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")|execute("normal `\"")|endif
-
-" Fix my <Backspace> key (in Mac OS X Terminal)
-"set t_kb=
-"fixdel
 
 " Avoid loading MatchParen plugin
 "let loaded_matchparen = 1
@@ -133,6 +127,8 @@ let g:netrw_browse_split = 1
 :set ignorecase
 :set smartcase
 
+" Enable incremental search
+set incsearch
 
 " turn off JSLint highlighting 
 let g:JSLintHighlightErrorLine = 0
@@ -144,35 +140,21 @@ let b:jslint_disabled = 1
 " MAPPINGS
 "
 
-" save changes
-map ,s :w<CR>
-" exit vim without saving any changes
-map ,q :q!<CR>
-" exit vim saving changes
-map ,w :x<CR>
-" switch to upper/lower window quickly
-map <C-J> <C-W>j
-map <C-K> <C-W>k
 " use CTRL-F for omni completion
 imap <C-F> 
 " map CTRL-L to piece-wise copying of the line above the current one
 imap <C-L> a<esc>kywgi<esc>Pla<bs>
-" map ,f to display all lines with keyword under cursor and ask which one to
+" map <space>f to display all lines with keyword under cursor and ask which one to
 " jump to
-nmap ,f [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+nmap <space>f [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
 " use <F6> to toggle line numbers
 nmap <silent> <F6> :set number!<CR>
-" cursor right with <Space>
-nmap <Space> l
 " open filename under cursor in a new window (use current file's working
 " directory) 
 nmap gf :new %:p:h/<cfile><CR>
 " map <Alt-p> and <Alt-P> to paste below/above and reformat
 nnoremap <Esc>P  P'[v']=
 nnoremap <Esc>p  p'[v']=
-" visual shifting (does not exit Visual mode)
-vnoremap < <gv
-vnoremap > >gv 
 
 "colors
 colo delek
@@ -202,19 +184,14 @@ if has("cscope")
 endif
 
 
-" code folding
-function! JavaScriptFold() 
-    setl foldmethod=syntax
-    setl foldlevelstart=99
-    syn region foldBraces start=/{/ end=/}/ transparent fold keepend extend
 
-    function! FoldText()
-        return substitute(getline(v:foldstart), '{.*', '{...}', '')
-    endfunction
-    setl foldtext=FoldText()
-endfunction
-au FileType javascript call JavaScriptFold()
-au FileType javascript setl fen
+
+" Folding rules {{{
+set foldenable                  " enable folding
+set foldmethod=syntax           " detect triple-{ style fold markers
+set foldlevelstart=1            " start out with everything un-folded
+set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
+
 
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/after/syntax/yaml.vim
 
@@ -222,7 +199,7 @@ au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/after/syntax/yaml.vim
 nmap <silent> <F10> :cn!<CR>
 nmap <silent> <F9> :cp!<CR>
 nmap <silent> <F11> :copen<CR>
-nmap <silent> <F12> :cclose<CR>
+"nmap <silent> <F12> :cclose<CR>
 
 
 
@@ -261,14 +238,45 @@ nmap <silent> <F2> :set list!<CR>
 set t_Co=256
 
 
+" Open a new horizontal split
+nnoremap <silent> <Space>s :sp<CR>
+" Open a new horizontal split
+nnoremap <silent> <Space>n :new<CR>
+" Open a new vertical split
+nnoremap <silent> <Space>v :vs<CR>
+" close other open windows
+nnoremap <silent> <Space>o <C-W>o
+" Move around between splits
+nnoremap <Space>h <C-W>h
+nnoremap <Space>l <C-W>l
+nnoremap <Space>j <C-W>j
+nnoremap <Space>k <C-W>k
+
+"Open a scratch buffer in a split window
+nnoremap <silent> <Space>S :Sscratch<CR>
+
+
 "use +/- to resize horizontal split
 map + <c-w>+
 map - <c-w>-
 
-"use C-,/C-. to resize vertical split
-map < <c-w><
-map > <c-w>>
-
-
 " Set the <Leader> for combo commands
 let mapleader = ","
+
+"Force Saving Files that Require Root Permission
+cmap w!! %!sudo tee > /dev/null %
+
+map K <c-u>
+map J <c-d>
+
+" doesn't seem to work well
+" autocmd FileType python set omnifunc=pythoncomplete#Complete
+"let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
+"pydiction got in the way of ctag keywords
+"let g:pydiction_location = '~/.vim/pydiction/complete-dict'
+
+
+"call pathogen#infect()
+
+autocmd FileType python map <buffer> <F5> :call Flake8()<CR>
+
